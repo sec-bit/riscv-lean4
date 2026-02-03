@@ -48,7 +48,15 @@ inductive Instr where
   | SLL   (rd rs1 rs2 : Reg)  -- rd := rs1 << rs2[4:0]
   | SRL   (rd rs1 rs2 : Reg)  -- rd := rs1 >>ᵤ rs2[4:0]  (logical)
   | SRA   (rd rs1 rs2 : Reg)  -- rd := rs1 >>ₛ rs2[4:0]  (arithmetic)
-
+  /--! ### I-type: Immediate ALU Operations
+      Format: imm[11:0] | rs1 | funct3 | rd | opcode
+      Semantics: rd := rs1 OP sext(imm) -/
+  | ADDI (rd rs1 : Reg) (imm : Imm12)   -- rd := rs1 + sext(imm)
+  | ANDI (rd rs1 : Reg) (imm : Imm12)   -- rd := rs1 & sext(imm)
+  | ORI   (rd rs1 : Reg) (imm : Imm12)  -- rd := rs1 | sext(imm)
+  | XORI  (rd rs1 : Reg) (imm : Imm12)  -- rd := rs1 ^ sext(imm)
+  | SLTI  (rd rs1 : Reg) (imm : Imm12)  -- rd := (rs1 <ₛ sext(imm)) ? 1 : 0
+  | SLTIU (rd rs1 : Reg) (imm : Imm12)  -- rd := (rs1 <ᵤ sext(imm)) ? 1 : 0
 
 
 
