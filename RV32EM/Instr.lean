@@ -57,6 +57,12 @@ inductive Instr where
   | XORI  (rd rs1 : Reg) (imm : Imm12)  -- rd := rs1 ^ sext(imm)
   | SLTI  (rd rs1 : Reg) (imm : Imm12)  -- rd := (rs1 <ₛ sext(imm)) ? 1 : 0
   | SLTIU (rd rs1 : Reg) (imm : Imm12)  -- rd := (rs1 <ᵤ sext(imm)) ? 1 : 0
+  /--! ### I-type: Immediate Shifts
+      Format: 0000000|shamt[4:0] | rs1 | funct3 | rd | opcode
+      Note: shamt is 5 bits, encoded in imm[4:0]. imm[11:5] distinguishes SRL/SRA. -/
+  | SLLI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 << shamt
+  | SRLI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 >>ᵤ shamt
+  | SRAI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 >>ₛ shamt
 
 
 
