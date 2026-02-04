@@ -92,6 +92,16 @@ inductive Instr where
       Semantics: rd := imm << 12 -/
   | LUI   (rd : Reg) (imm : Imm20)  -- rd := imm << 12
   | AUIPC (rd : Reg) (imm : Imm20)  -- rd := pc + (imm << 12)
+  /--! ### J-type: Jump and Link
+      Format: imm[20|10:1|11|19:12] | rd | opcode
+      Semantics: rd := pc + 4; pc := pc + sext(imm<<1)
+      Note: imm encodes multiples of 2, so effective range is ±1MB -/
+  | JAL   (rd : Reg) (imm : Imm20)  -- rd := pc+4; pc := pc + sext(imm<<1)
+
+  /--! ### I-type: Jump and Link Register
+      Format: imm[11:0] | rs1 | funct3 | rd | opcode
+      Semantics: rd := pc + 4; pc := (rs1 + sext(imm)) & ~1 -/
+  | JALR  (rd rs1 : Reg) (imm : Imm12)  -- rd := pc+4; pc := (rs1+sext(imm)) & ~1
 
 
 
