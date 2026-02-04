@@ -97,11 +97,25 @@ inductive Instr where
       Semantics: rd := pc + 4; pc := pc + sext(imm<<1)
       Note: imm encodes multiples of 2, so effective range is ±1MB -/
   | JAL   (rd : Reg) (imm : Imm20)  -- rd := pc+4; pc := pc + sext(imm<<1)
-
   /--! ### I-type: Jump and Link Register
       Format: imm[11:0] | rs1 | funct3 | rd | opcode
       Semantics: rd := pc + 4; pc := (rs1 + sext(imm)) & ~1 -/
   | JALR  (rd rs1 : Reg) (imm : Imm12)  -- rd := pc+4; pc := (rs1+sext(imm)) & ~1
+  /--! ### M Extension: Multiply/Divide
+      Format: 0000001 | rs2 | rs1 | funct3 | rd | opcode (R-type)
+      All are rd := rs1 OP rs2 -/
+  | MUL (rd rs1 rs2 : Reg) -- rd := (rs1 * rs2)[31:0]
+  | MULH   (rd rs1 rs2 : Reg)  -- rd := (rs1 ×ₛ rs2)[63:32]  (signed×signed)
+  | MULHSU (rd rs1 rs2 : Reg)  -- rd := (rs1 ×ₛ rs2)[63:32]  (signed×unsigned)
+  | MULHU  (rd rs1 rs2 : Reg)  -- rd := (rs1 ×ᵤ rs2)[63:32]  (unsigned×unsigned)
+  | DIV    (rd rs1 rs2 : Reg)  -- rd := rs1 /ₛ rs2  (signed)
+  | DIVU   (rd rs1 rs2 : Reg)  -- rd := rs1 /ᵤ rs2  (unsigned)
+  | REM    (rd rs1 rs2 : Reg)  -- rd := rs1 %ₛ rs2  (signed)
+  | REMU   (rd rs1 rs2 : Reg)  -- rd := rs1 %ᵤ rs2  (unsigned)
+deriving Repr
+
+
+
 
 
 
