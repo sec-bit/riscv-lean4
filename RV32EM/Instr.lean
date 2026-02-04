@@ -63,6 +63,35 @@ inductive Instr where
   | SLLI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 << shamt
   | SRLI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 >>ᵤ shamt
   | SRAI  (rd rs1 : Reg) (shamt : Fin 32)  -- rd := rs1 >>ₛ shamt
+  /--! ### I-type: Loads
+      Format: imm[11:0] | rs1 | funct3 | rd | opcode
+      Semantics: rd := mem[rs1 + sext(imm)] -/
+  | LW    (rd rs1 : Reg) (imm : Imm12)  -- rd := mem32[rs1 + sext(imm)]
+  | LH    (rd rs1 : Reg) (imm : Imm12)  -- rd := sext(mem16[rs1 + sext(imm)])
+  | LB    (rd rs1 : Reg) (imm : Imm12)  -- rd := sext(mem8[rs1 + sext(imm)])
+  | LHU   (rd rs1 : Reg) (imm : Imm12)  -- rd := zext(mem16[rs1 + sext(imm)])
+  | LBU   (rd rs1 : Reg) (imm : Imm12)  -- rd := zext(mem8[rs1 + sext(imm)])
+  /--! ### S-type: Stores
+      Format: imm[11:5] | rs2 | rs1 | funct3 | imm[4:0] | opcode
+      Semantics: mem[rs1 + sext(imm)] := rs2 -/
+  | SW    (rs1 rs2 : Reg) (imm : Imm12)  -- mem32[rs1 + sext(imm)] := rs2
+  | SH    (rs1 rs2 : Reg) (imm : Imm12)  -- mem16[rs1 + sext(imm)] := rs2[15:0]
+  | SB    (rs1 rs2 : Reg) (imm : Imm12)  -- mem8[rs1 + sext(imm)] := rs2[7:0]
+  /--! ### B-type: Conditional Branches
+      Format: imm[12|10:5] | rs2 | rs1 | funct3 | imm[4:1|11] | opcode
+      Semantics: if (rs1 CMP rs2) then pc := pc + sext(imm<<1)
+      Note: imm encodes multiples of 2, so effective range is ±4KB -/
+  | BEQ   (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 = rs2
+  | BNE   (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 ≠ rs2
+  | BLT   (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 <ₛ rs2
+  | BGE   (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 ≥ₛ rs2
+  | BLTU  (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 <ᵤ rs2
+  | BGEU  (rs1 rs2 : Reg) (imm : Imm12)  -- branch if rs1 ≥ᵤ rs2
+  /--! ### U-type: Upper Immediate
+      Format: imm[31:12] | rd | opcode
+      Semantics: rd := imm << 12 -/
+  | LUI   (rd : Reg) (imm : Imm20)  -- rd := imm << 12
+  | AUIPC (rd : Reg) (imm : Imm20)  -- rd := pc + (imm << 12)
 
 
 
