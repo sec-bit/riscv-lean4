@@ -9,10 +9,9 @@
 -/
 
 import RV32EM.Basic
--- import RV32EM.Instr    -- Uncomment as you implement
+-- import RV32EM.Instr    
 -- import RV32EM.Encode
 -- import RV32EM.Decode
 -- import RV32EM.Mach
 -- import RV32EM.Step
 -- import RV32EM.Proofs
-

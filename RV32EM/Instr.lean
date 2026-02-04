@@ -114,9 +114,36 @@ inductive Instr where
   | REMU   (rd rs1 rs2 : Reg)  -- rd := rs1 %ᵤ rs2  (unsigned)
 deriving Repr
 
+-- INSTRUCTION CLASSFICATION HELPERS
 
+/-- Check if instruction is R-type ( 3 register operands, no immediate) -/
+def Instr.isRtype : Instr → Bool
+  | .ADD .. | .SUB .. | .AND .. | .OR ..  | .XOR ..
+  | .SLT .. | .SLTU .. | .SLL .. | .SRL .. | .SRA ..
+  | .MUL .. | .MULH .. | .MULHSU .. | .MULHU ..
+  | .DIV .. | .DIVU .. | .REM .. | .REMU .. => true
+  | _ => false
 
+/-- Check if instruction is a branch -/
+def Instr.isBranch : Instr → Bool
+  | .BEQ .. | .BNE .. | .BLT .. | .BGE .. | .BLTU .. | .BGEU .. => true
+  | _ => false
 
+/-- Check if instruction is a load -/
+def Instr.isLoad : Instr → Bool
+  | .LW .. | .LH .. | .LB .. | .LHU .. | .LBU .. => true
+  | _ => false
+
+/-- Check if instruction is a store -/
+def Instr.isStore : Instr → Bool
+  | .SW .. | .SH .. | .SB .. => true
+  | _ => false
+
+/-- Check if instruction modifies PC (jump/branch) -/
+def Instr.isControlFlow : Instr → Bool
+  | .BEQ .. | .BNE .. | .BLT .. | .BGE .. | .BLTU .. | .BGEU ..
+  | .JAL .. | .JALR .. => true
+  | _ => false
 
 
 end RV32EM
